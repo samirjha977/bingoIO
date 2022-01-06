@@ -7,21 +7,23 @@ const cors = require("cors")
 
 const { validateToken } = require('./validateToken');
 
+var allowedOrigins = ['http://localhost:3000',
+                      'http://167.224.231.245',
+                      'http://bingomingo.s3-website-us-west-2.amazonaws.com/'];
+
 // Create Express App
 const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "*",
+    origin: allowedOrigins,
     methods: ["GET", "POST"]
   }
 });
 app.set('port', process.env.PORT || 3052);
 
 //view engine setup
-var allowedOrigins = ['http://localhost:3000',
-                      'http://167.224.231.245',
-                      'http://bingomingo.s3-website-us-west-2.amazonaws.com/'];
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
