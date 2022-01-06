@@ -19,14 +19,27 @@ const io = require("socket.io")(server, {
 app.set('port', process.env.PORT || 3052);
 
 //view engine setup
-
+var allowedOrigins = ['http://localhost:3000',
+                      'http://167.224.231.245',
+                      'http://bingomingo.s3-website-us-west-2.amazonaws.com/'];
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors())
-
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 const IO_Transport = io.on('connection', (socket) => {
   console.log('a user connected');
@@ -37,6 +50,10 @@ const IO_Transport = io.on('connection', (socket) => {
 
 server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
+});
+
+app.get('/', function (req, res){
+res.send("Error").status(404);
 });
 
 
