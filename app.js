@@ -16,7 +16,7 @@ const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
@@ -75,7 +75,6 @@ app.post('/bingoBroadcast', validateToken, function (req, res) {
 
 app.post('/broadcastPlayers', validateToken, function (req, res) {
   const gameName = req.body.data.gameName;
-  console.log(gameName)
   const players = req.body.data.players;
   let obj = {gameKey: gameName, players: players}
   IO_Transport.emit('playerJoined', JSON.stringify(obj));
