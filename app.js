@@ -66,6 +66,12 @@ app.post('/broadcastGameOver', validateToken, function (req, res) {
   res.send({ code: 0 });
 });
 
+app.post('/BlackOut', validateToken, function (req, res) {
+  const data = req.body.data;
+  IO_Transport.emit('BlackOut', JSON.stringify(data));
+  res.send({ code: 0 });
+});
+
 app.post('/bingoBroadcast', validateToken, function (req, res) {
   const data = req.body.data;
   IO_Transport.emit('bingo', JSON.stringify(data));
